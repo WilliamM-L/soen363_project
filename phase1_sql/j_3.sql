@@ -6,4 +6,4 @@ WHERE ac.name NOT IN (
     FROM co_actors coa, actors a
     WHERE coa.name = a.name AND coa.name = ac.name AND ac.mid = a.mid);
 
-SELECT COUNT(*) from non_existent;
+SELECT COUNT(*) FROM non_existent;
