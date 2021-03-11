@@ -1,3 +1,7 @@
-DELETE FROM co_actors
-USING non_existent n_e 
-WHERE co_actors.name = n_e.name;
+SELECT co.*
+FROM co_actors co
+WHERE co.name NOT IN (
+    SELECT ne.name 
+    FROM non_existent ne 
+    WHERE ne.name =co.name
+    );
