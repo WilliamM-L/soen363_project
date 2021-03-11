@@ -11,14 +11,14 @@ FROM movies m
 WHERE m.mid <= ALL (
 	SELECT n.mid
 	FROM movies n
-	WHERE m.title = n.title
+	WHERE m.title = n.title AND m.year = n.year
 	)
 order by m.title;
 
 --actors with duplicates
 SELECT DISTINCT a.*
 FROM actors a, actors b
-WHERE (a.name = b.name AND a.mid = b.mid AND a.cast_position != b.cast_position) OR (a.name != b.name AND a.mid = b.mid AND a.cast_position = b.cast_position)
+WHERE a.name != b.name AND a.mid = b.mid AND a.cast_position = b.cast_position
 order by a.mid, a.name;
 
 --actors without duplicates
@@ -28,7 +28,7 @@ FROM actors c
 WHERE (c.mid, c.name) NOT IN (
 	SELECT DISTINCT a.mid, a.name
 	FROM actors a, actors b
-	WHERE (a.name = b.name AND a.mid = b.mid AND a.cast_position != b.cast_position) OR (a.name != b.name AND a.mid = b.mid AND a.cast_position = b.cast_position)
+	WHERE a.name != b.name AND a.mid = b.mid AND a.cast_position = b.cast_position
 	)
 ORDER BY c.mid, c.name;
 
@@ -42,4 +42,3 @@ ORDER BY c.mid, c.name;
 
 --tag_names with duplicates
 select t1.* from tag_names t1, tag_names t2 where t1.tid != t2.tid AND t1.tag = t2.tag;
-
