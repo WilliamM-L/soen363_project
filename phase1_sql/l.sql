@@ -1,72 +1,72 @@
 CREATE OR REPLACE FUNCTION public.similarity(
-	"X_mid" integer,
-	"Y_mid" integer)
-    RETURNS real
+	"X_mid" INTEGER,
+	"Y_mid" INTEGER)
+    RETURNS REAL
     LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
-X_mid integer;
-Y_mid integer;
+X_mid INTEGER;
+Y_mid INTEGER;
 
-X_num_actors integer;
-common_actors integer;
-actor_ratio numeric;
+X_num_actors INTEGER;
+common_actors INTEGER;
+actor_ratio NUMERIC;
 
-X_num_tags integer;
-common_tags integer;
-tag_ratio numeric;
+X_num_tags INTEGER;
+common_tags INTEGER;
+tag_ratio NUMERIC;
 
-X_num_genres integer;
-common_genres integer;
-genre_ratio numeric;
+X_num_genres INTEGER;
+common_genres INTEGER;
+genre_ratio NUMERIC;
 
-max_date integer;
-min_date integer;
-X_date integer;
-Y_date integer;
-date_factor numeric;
+max_date INTEGER;
+min_date INTEGER;
+X_date INTEGER;
+Y_date INTEGER;
+date_factor NUMERIC;
 
-X_rating real;
-Y_rating real;
-rating_factor numeric;
-begin
+X_rating REAL;
+Y_rating REAL;
+rating_factor NUMERIC;
+BEGIN
 
 X_mid = $1;
 Y_mid = $2;
 
-select count(*) into X_num_actors from actors where mid=X_mid;
-select count(*) into common_actors from (
-	select name from actors where mid=X_mid
-	intersect
-	select name from actors where mid=Y_mid
-) as actors_intersection;
-actor_ratio = cast(common_actors as numeric)/X_num_actors;
+SELECT COUNT(*) INTO X_num_actors FROM actors WHERE mid=X_mid;
+SELECT COUNT(*) INTO common_actors FROM (
+	SELECT name FROM actors WHERE mid=X_mid
+	INTERSECT
+	SELECT name FROM actors WHERE mid=Y_mid
+) AS actors_intersection;
+actor_ratio = cast(common_actors AS NUMERIC)/X_num_actors;
 
-select count(*) into X_num_tags from tags where tags.mid=X_mid;
-select count(*) into common_tags from (
-	select tid from tags where tags.mid=X_mid
-	intersect
-	select tid from tags where tags.mid=Y_mid
-) as tags_intersection;
-tag_ratio = cast(common_tags as numeric)/X_num_tags;
+SELECT COUNT(*) INTO X_num_tags FROM tags WHERE tags.mid=X_mid;
+SELECT COUNT(*) INTO common_tags FROM (
+	SELECT tid FROM tags WHERE tags.mid=X_mid
+	INTERSECT
+	SELECT tid FROM tags WHERE tags.mid=Y_mid
+) AS tags_intersection;
+tag_ratio = cast(common_tags AS NUMERIC)/X_num_tags;
 
-select count(*) into X_num_genres from genres where genres.mid=X_mid;
-select count(*) into common_genres from (
-	select genre from genres where genres.mid=X_mid
-	intersect
-	select genre from genres where genres.mid=Y_mid
-) as genres_intersection;
-genre_ratio = cast(common_genres as numeric)/X_num_genres;
+SELECT COUNT(*) INTO X_num_genres FROM genres WHERE genres.mid=X_mid;
+SELECT COUNT(*) INTO common_genres FROM (
+	SELECT genre FROM genres WHERE genres.mid=X_mid
+	INTERSECT
+	SELECT genre FROM genres WHERE genres.mid=Y_mid
+) AS genres_intersection;
+genre_ratio = cast(common_genres AS NUMERIC)/X_num_genres;
 
-select max(year) into max_date from movies;
-select min(year) into min_date from movies;
-select year into X_date from movies where mid=X_mid;
-select year into Y_date from movies where mid=Y_mid;
-date_factor = 1 - ABS(cast((X_date - Y_date) as numeric) / (max_date - min_date));
+SELECT max(year) INTO max_date FROM movies;
+SELECT min(year) INTO min_date FROM movies;
+SELECT year INTO X_date FROM movies WHERE mid=X_mid;
+SELECT year INTO Y_date FROM movies WHERE mid=Y_mid;
+date_factor = 1 - ABS(cast((X_date - Y_date) AS NUMERIC) / (max_date - min_date));
 
-select rating into X_rating from movies where mid=X_mid;
-select rating into Y_rating from movies where mid=Y_mid;
-rating_factor = 1 - ABS(cast((X_rating - Y_rating) as numeric) / 5.0);
+SELECT rating INTO X_rating FROM movies WHERE mid=X_mid;
+SELECT rating INTO Y_rating FROM movies WHERE mid=Y_mid;
+rating_factor = 1 - ABS(cast((X_rating - Y_rating) AS NUMERIC) / 5.0);
 
 -- raise notice '% actors, % common_actors, % actor_ratio',
 -- X_num_actors, common_actors, actor_ratio;
@@ -78,24 +78,24 @@ rating_factor = 1 - ABS(cast((X_rating - Y_rating) as numeric) / 5.0);
 -- X_date, Y_date, date_factor;
 -- raise notice ' % X_rating, % Y_rating, % rating_factor',
 -- X_rating, Y_rating, rating_factor;
-return (actor_ratio + tag_ratio + genre_ratio + date_factor + rating_factor)/5.0;
+RETURN (actor_ratio + tag_ratio + genre_ratio + date_factor + rating_factor)/5.0;
 end;
 $BODY$;
 
-select mid from movies where title='Mr. & Mrs. Smith';
+SELECT mid FROM movies WHERE title='Mr. & Mrs. Smith';
 
--- from there create the view with the ID (2205 in this case)
+-- FROM there create the view with the ID (2205 in this case)
 CREATE OR REPLACE VIEW "similarity_Smith"
  AS
 SELECT movies.title,
    movies.rating,
-   100 * similarity(2205, movies.mid) as similarity
+   100 * similarity(2205, movies.mid) AS similarity
   FROM movies WHERE
-  mid != 2205 and
-  title != 'Mr. & Mrs. Smith' and
-  rating is not null and
-  year is not null
+  mid != 2205 AND
+  title != 'Mr. & Mrs. Smith' AND
+  rating IS NOT NULL AND
+  year IS NOT NULL
   ;
 
   -- Getting the 10 best matches
-  select * from "similarity_Smith" order by similarity desc limit 10;
+  SELECT * FROM "similarity_Smith" ORDER BY similarity DESC LIMIT 10;
