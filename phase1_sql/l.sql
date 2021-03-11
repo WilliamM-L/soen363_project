@@ -40,7 +40,7 @@ SELECT COUNT(*) INTO common_actors FROM (
 	INTERSECT
 	SELECT name FROM actors WHERE mid=Y_mid
 ) AS actors_intersection;
-actor_ratio = cast(common_actors AS NUMERIC)/X_num_actors;
+actor_ratio = CAST(common_actors AS NUMERIC)/X_num_actors;
 
 SELECT COUNT(*) INTO X_num_tags FROM tags WHERE tags.mid=X_mid;
 SELECT COUNT(*) INTO common_tags FROM (
@@ -48,7 +48,7 @@ SELECT COUNT(*) INTO common_tags FROM (
 	INTERSECT
 	SELECT tid FROM tags WHERE tags.mid=Y_mid
 ) AS tags_intersection;
-tag_ratio = cast(common_tags AS NUMERIC)/X_num_tags;
+tag_ratio = CAST(common_tags AS NUMERIC)/X_num_tags;
 
 SELECT COUNT(*) INTO X_num_genres FROM genres WHERE genres.mid=X_mid;
 SELECT COUNT(*) INTO common_genres FROM (
@@ -56,28 +56,18 @@ SELECT COUNT(*) INTO common_genres FROM (
 	INTERSECT
 	SELECT genre FROM genres WHERE genres.mid=Y_mid
 ) AS genres_intersection;
-genre_ratio = cast(common_genres AS NUMERIC)/X_num_genres;
+genre_ratio = CAST(common_genres AS NUMERIC)/X_num_genres;
 
 SELECT max(year) INTO max_date FROM movies;
 SELECT min(year) INTO min_date FROM movies;
 SELECT year INTO X_date FROM movies WHERE mid=X_mid;
 SELECT year INTO Y_date FROM movies WHERE mid=Y_mid;
-date_factor = 1 - ABS(cast((X_date - Y_date) AS NUMERIC) / (max_date - min_date));
+date_factor = 1 - ABS(CAST((X_date - Y_date) AS NUMERIC) / (max_date - min_date));
 
 SELECT rating INTO X_rating FROM movies WHERE mid=X_mid;
 SELECT rating INTO Y_rating FROM movies WHERE mid=Y_mid;
-rating_factor = 1 - ABS(cast((X_rating - Y_rating) AS NUMERIC) / 5.0);
+rating_factor = 1 - ABS(CAST((X_rating - Y_rating) AS NUMERIC) / 5.0);
 
--- raise notice '% actors, % common_actors, % actor_ratio',
--- X_num_actors, common_actors, actor_ratio;
--- raise notice '% tags, % common_tags, % tag_ratio',
--- X_num_tags, common_tags, tag_ratio;
--- raise notice '% genres, % common_genres, % genre_ratio',
--- X_num_genres, common_genres, genre_ratio;
--- raise notice '% X_date, % Y_date, % date_factor',
--- X_date, Y_date, date_factor;
--- raise notice ' % X_rating, % Y_rating, % rating_factor',
--- X_rating, Y_rating, rating_factor;
 RETURN (actor_ratio + tag_ratio + genre_ratio + date_factor + rating_factor)/5.0;
 end;
 $BODY$;
