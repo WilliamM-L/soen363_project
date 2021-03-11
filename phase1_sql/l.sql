@@ -1,4 +1,13 @@
+CREATE OR REPLACE FUNCTION public.similarity(
+	"X_mid" integer,
+	"Y_mid" integer)
+    RETURNS real
+    LANGUAGE 'plpgsql'
+AS $BODY$
 DECLARE
+X_mid integer;
+Y_mid integer;
+
 X_num_actors integer;
 common_actors integer;
 actor_ratio numeric;
@@ -20,39 +29,43 @@ date_factor numeric;
 X_rating real;
 Y_rating real;
 rating_factor numeric;
-BEGIN
-select count(*) into X_num_actors from actors where mid=$1;
+begin
+
+X_mid = $1;
+Y_mid = $2;
+
+select count(*) into X_num_actors from actors where mid=X_mid;
 select count(*) into common_actors from (
-	select name from actors where mid=$1
+	select name from actors where mid=X_mid
 	intersect
-	select name from actors where mid=$2
+	select name from actors where mid=Y_mid
 ) as actors_intersection;
 actor_ratio = cast(common_actors as numeric)/X_num_actors;
 
-select count(*) into X_num_tags from tags where tags.mid=$1;
+select count(*) into X_num_tags from tags where tags.mid=X_mid;
 select count(*) into common_tags from (
-	select tid from tags where tags.mid=$1
+	select tid from tags where tags.mid=X_mid
 	intersect
-	select tid from tags where tags.mid=$2
+	select tid from tags where tags.mid=Y_mid
 ) as tags_intersection;
 tag_ratio = cast(common_tags as numeric)/X_num_tags;
 
-select count(*) into X_num_genres from genres where genres.mid=$1;
+select count(*) into X_num_genres from genres where genres.mid=X_mid;
 select count(*) into common_genres from (
-	select genre from genres where genres.mid=$1
+	select genre from genres where genres.mid=X_mid
 	intersect
-	select genre from genres where genres.mid=$2
+	select genre from genres where genres.mid=Y_mid
 ) as genres_intersection;
 genre_ratio = cast(common_genres as numeric)/X_num_genres;
 
 select max(year) into max_date from movies;
 select min(year) into min_date from movies;
-select year into X_date from movies where mid=$1;
-select year into Y_date from movies where mid=$2;
+select year into X_date from movies where mid=X_mid;
+select year into Y_date from movies where mid=Y_mid;
 date_factor = 1 - ABS(cast((X_date - Y_date) as numeric) / (max_date - min_date));
 
-select rating into X_rating from movies where mid=$1;
-select rating into Y_rating from movies where mid=$2;
+select rating into X_rating from movies where mid=X_mid;
+select rating into Y_rating from movies where mid=Y_mid;
 rating_factor = 1 - ABS(cast((X_rating - Y_rating) as numeric) / 5.0);
 
 -- raise notice '% actors, % common_actors, % actor_ratio',
@@ -66,9 +79,10 @@ rating_factor = 1 - ABS(cast((X_rating - Y_rating) as numeric) / 5.0);
 -- raise notice ' % X_rating, % Y_rating, % rating_factor',
 -- X_rating, Y_rating, rating_factor;
 return (actor_ratio + tag_ratio + genre_ratio + date_factor + rating_factor)/5.0;
-END;
+end;
+$BODY$;
 
-select mid from movies where title='Mr. & Mrs. Smith'
+select mid from movies where title='Mr. & Mrs. Smith';
 
 -- from there create the view with the ID (2205 in this case)
 CREATE OR REPLACE VIEW "similarity_Smith"
