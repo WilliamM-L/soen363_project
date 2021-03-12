@@ -1,0 +1,13 @@
+﻿Query,Result,Execution Time
+"CREATE VIEW high_ratings AS
+	SELECT DISTINCT a.name
+	FROM actors a, movies m
+	WHERE m.mid = a.mid AND m.rating NOTNULL AND m.rating >=4.0;",CREATE VIEW Query returned successfully,0.120 s
+"CREATE VIEW low_ratings AS
+	SELECT DISTINCT a.name
+	FROM actors a, movies m
+	WHERE m.mid = a.mid AND (m.rating <4.0 OR m.rating IS NULL);",CREATE VIEW Query returned successfully,0.091 s
+"SELECT COUNT(*)
+FROM high_ratings;",13710,0.210 s
+"SELECT COUNT(*)
+FROM low_ratings;",88277,0.739 s
