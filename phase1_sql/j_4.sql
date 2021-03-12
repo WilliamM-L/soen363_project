@@ -1,7 +1,3 @@
-SELECT co.*
-FROM co_actors co
-WHERE co.name NOT IN (
-    SELECT ne.name 
-    FROM non_existent ne 
-    WHERE ne.name = co.name
-    );
+SELECT name FROM co_actors
+EXCEPT
+SELECT name FROM non_existent;
