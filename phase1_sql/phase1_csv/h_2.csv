@@ -1,0 +1,9 @@
+﻿Query,Result,Execution Time
+"SELECT COUNT(a.name) AS num_no_flops
+FROM actors a
+WHERE a.name IN (
+    SELECT name FROM high_ratings 
+    EXCEPT 
+    SELECT name FROM low_ratings
+    );",num_no_flops,0.603 s
+,7927,
