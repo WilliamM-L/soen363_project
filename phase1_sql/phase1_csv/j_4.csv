@@ -1,0 +1,6 @@
+﻿Query,Result,Execution Time
+"SELECT name FROM co_actors
+EXCEPT
+SELECT name FROM non_existent;",name,64 s
+,Kristen Connolly,
+,Christian Perry,
