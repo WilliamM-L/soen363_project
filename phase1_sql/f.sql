@@ -1,20 +1,30 @@
-SELECT * FROM movies WHERE num_rating = (SELECT max(num_rating) from movies);
+CREATE OR REPLACE VIEW valid_ratings
+ AS
+SELECT *
+  FROM movies WHERE
+  rating > 0 AND
+  rating IS NOT NULL
+  ;
 
-SELECT * FROM movies WHERE rating = (SELECT max(rating) from movies);
+-- ran in 102 msec
 
-SELECT * FROM movies WHERE num_rating = (SELECT max(num_rating) from movies)
+SELECT * FROM valid_ratings WHERE num_rating = (SELECT max(num_rating) from valid_ratings);
+
+SELECT * FROM valid_ratings WHERE rating = (SELECT max(rating) from valid_ratings);
+
+SELECT * FROM valid_ratings WHERE num_rating = (SELECT max(num_rating) from valid_ratings)
 INTERSECT
-SELECT * FROM movies WHERE rating = (SELECT max(rating) from movies);
+SELECT * FROM valid_ratings WHERE rating = (SELECT max(rating) from valid_ratings);
 
 
-SELECT * FROM movies WHERE rating = (SELECT min(rating) from movies)
+SELECT * FROM valid_ratings WHERE rating = (SELECT min(rating) from valid_ratings)
 order by mid asc;
 
-SELECT * FROM movies WHERE num_rating = (SELECT max(num_rating) from movies)
+SELECT * FROM valid_ratings WHERE num_rating = (SELECT max(num_rating) from valid_ratings)
 INTERSECT
-SELECT * FROM movies WHERE rating = (SELECT min(rating) from movies);
+SELECT * FROM valid_ratings WHERE rating = (SELECT min(rating) from valid_ratings);
 
 -- In conclusion, the conjecture is false. The movies with the lowest or
 -- highest ratings don't have the highest number of ratings. It's more like
--- the opposite in fact, the movies with a perfect rating only have a few
--- ratings and the movies with the worse ratings have 0 ratings.
+-- the opposite in fact, the movies with a perfect rating or the worse rating
+-- only have a few ratings.
