@@ -1,6 +1,12 @@
-//To be reviewed
-SELECT DISTINCT D.Year, CP.primary_type, COUNT(DISTINCT C.cid) as num_crimes_of_type
-FROM Date D, Crime C, Crime CP
-WHERE D.cid = C.cid AND CP.primary_type = C.primary_type
-Group by (D.Year, num_crimes_of_type)
-Order by D.Year DESC, num_crimes_of_type DESC;
+SELECT * FROM (
+SELECT DISTINCT D.Year, C.primary_type, row_number() over (order by count(C.cid) desc) as num_crimes
+FROM crime_date D, crime C
+WHERE D.cid = C.cid
+Group by (D.Year, C.primary_type)
+Order by D.Year desc, num_crimes desc) all_crimes
+where num_crimes > 450;
+
+SELECT C.primary_type, COUNT(C.cid) as num_crimes_of_type
+FROM crime C
+Group by (C.primary_type)
+order by num_crimes_of_type desc;

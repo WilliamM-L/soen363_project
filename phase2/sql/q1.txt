@@ -1,5 +1,5 @@
 SELECT DISTINCT D.Year, COUNT(DISTINCT C.cid) as num_crimes
-FROM Date D, Crime C
+FROM crime_date D, crime C
 WHERE D.cid = C.cid
 Group by (D.Year)
-Order by D.Year;
+Order by num_crimes desc;
