@@ -1,5 +1,0 @@
-SELECT DISTINCT D.Year, COUNT(DISTINCT C.cid) as num_crimes
-FROM crime_date D, crime C
-WHERE D.cid = C.cid
-Group by (D.Year)
-Order by num_crimes desc;

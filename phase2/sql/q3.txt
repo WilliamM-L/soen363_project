@@ -1,5 +1,0 @@
-SELECT DISTINCT P.Ward, COUNT(DISTINCT C.cid) as num_crimes
-FROM crime_police_area P, crime C
-WHERE P.cid = C.cid AND P.Ward IS NOT NULL
-Group by (P.Ward)
-Order by num_crimes desc;
