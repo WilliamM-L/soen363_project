@@ -19,3 +19,5 @@ db.crimes.aggregate([
         }
     }
 ])
+
+//3T Generated: Count of crimes per type of crime & year

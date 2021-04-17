@@ -29,3 +29,34 @@ db.crimes.aggregate([
         }
     }
 ])
+
+//3T GENERATED: Number of crimes per year
+db.crimes.aggregate(
+    [
+        { 
+            "$group" : { 
+                "_id" : { 
+                    "year" : "$year"
+                }, 
+                "COUNT(*)" : { 
+                    "$sum" : NumberInt(1)
+                }
+            }
+        }, 
+        { 
+            "$project" : { 
+                "year" : "$_id.year", 
+                "COUNT(*)" : "$COUNT(*)", 
+                "_id" : NumberInt(0)
+            }
+        }, 
+        { 
+            "$sort" : { 
+                "COUNT(*)" : NumberInt(-1)
+            }
+        }, 
+        { 
+            "$limit" : NumberInt(10)
+        }
+    ]
+);
