@@ -1,7 +1,6 @@
--- Show the top 10 years with the most crime
+-- Show how much crime there was per year
 SELECT D.year, COUNT(C.cid) as num_crimes
 FROM crime_date D, crime C
-WHERE D.cid = C.cid
-Group by (D.year)
-Order by num_crimes desc
-Limit 10;
+WHERE D.cid = C.cid and year != 41 -- eliminating the crime falsely labelled 
+Group by D.year
+Order by D.year asc;
