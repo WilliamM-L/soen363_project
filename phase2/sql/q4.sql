@@ -24,4 +24,4 @@ from
 	group by description
 ) as arrested_crimes
 where other_crime.description=arrested_crimes.description
-order by num_crimes desc;
+order by percentage_arrested desc;
