@@ -1,9 +1,10 @@
 -- Count of drug-related crimes per activity related to the drug
+
 SELECT count(*) FILTER (
-                        WHERE fbi_code ='18'
-                            AND c.description LIKE '%POSS%') AS possession,
+                        WHERE c.description LIKE '%POSS%') AS possession,
        count (*) FILTER (
-                         WHERE fbi_code ='18'
-                             AND c.description LIKE '%DELIVER%') AS manu_deliver
-FROM public.crime c;
+                         WHERE c.description LIKE '%MANU%') AS manu_deliver,
+             count(*) AS total
+FROM public.crime c
+WHERE fbi_code ='18';
 
