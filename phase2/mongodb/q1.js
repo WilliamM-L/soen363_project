@@ -1,11 +1,11 @@
-//Crimes in 2017 (listed)
+//Crimes in 2008 (listed)
 db.crimes.find(
     {
         year: 2008
     }
 )
 
-//Crimes in 2017 (aggregated)
+//Crimes in 2008 (aggregated)
 db.crimes.aggregate([
     {
         "$match" : {year: 2008}
