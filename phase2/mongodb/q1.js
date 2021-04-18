@@ -1,14 +1,3 @@
-//Numbers of crimes per year
-db.crimes.aggregate([
-    {
-        "$group" : 
-        {
-            _id:"$year",
-            count:{$sum:1}
-        }
-    }
-])
-
 //Crimes in 2017 (listed)
 db.crimes.find(
     {
@@ -30,15 +19,22 @@ db.crimes.aggregate([
     }
 ])
 
-//3T GENERATED: Number of crimes per year
+//Number of crimes per year
 db.crimes.aggregate(
     [
+        { 
+            "$match" : { 
+                "year" : { 
+                    "$ne" : NumberLong(41)
+                }
+            }
+        }, 
         { 
             "$group" : { 
                 "_id" : { 
                     "year" : "$year"
                 }, 
-                "COUNT(*)" : { 
+                "COUNT(cid)" : { 
                     "$sum" : NumberInt(1)
                 }
             }
@@ -46,17 +42,17 @@ db.crimes.aggregate(
         { 
             "$project" : { 
                 "year" : "$_id.year", 
-                "COUNT(*)" : "$COUNT(*)", 
+                "num_crimes" : "$COUNT(cid)", 
                 "_id" : NumberInt(0)
             }
         }, 
         { 
             "$sort" : { 
-                "COUNT(*)" : NumberInt(-1)
+                "year" : NumberInt(1)
             }
-        }, 
-        { 
-            "$limit" : NumberInt(10)
         }
-    ]
+    ], 
+    { 
+        "allowDiskUse" : true
+    }
 );
