@@ -5,6 +5,7 @@ SELECT c.primary_type, count(*) FILTER (
 ) AS num_of_arrest, 
 count (*) FILTER (
 	WHERE c.arrest = 'False'
-) AS num_of_nonarrest
+) AS num_of_nonarrest, count(c.cid) AS total_num_cases
 FROM crime c
 GROUP BY primary_type
+ORDER BY num_of_arrest DESC
