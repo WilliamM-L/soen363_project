@@ -6,7 +6,7 @@ SELECT count(*) FILTER (
        count (*) FILTER (
                          WHERE c.description LIKE '%HEROIN%') AS Heroin,
        count (*) FILTER (
-                         WHERE c.description LIKE '%COCAINE%') AS Cocaine
+                         WHERE c.description LIKE '%COCAINE%') AS Cocaine,
        (select count(*) from crime where primary_type='NARCOTICS') AS total_narcotics
 FROM public.crime c
 WHERE fbi_code='18';
