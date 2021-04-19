@@ -1,9 +1,10 @@
--- Type of crime per location description (group by location description)
+-- Type and number of crime per location description (group by location description)
 
-SELECT l.location_description, c.primary_type
+SELECT l.location_description, c.primary_type, count(c.cid) as num_crimes
 FROM crime c, crime_location l
 WHERE c.cid = l.cid
-GROUP BY l.location_description, c.primary_type;
+GROUP BY l.location_description, c.primary_type
+order by num_crimes desc;
 
 -- what is the most "popular" crime location?
 
