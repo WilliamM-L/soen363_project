@@ -38,7 +38,7 @@ db.getCollection("crime").aggregate(
             "$project" : { 
                 "year" : "$_id.year", 
                 "primary_type" : "$_id.primary_type", 
-                "COUNT(case_number)" : "$COUNT(case_number)", 
+                "num_crimes" : "$COUNT(case_number)", 
                 "_id" : NumberInt(0)
             }
         }, 
@@ -64,7 +64,7 @@ db.getCollection("crime").aggregate(
         { 
             "$sort" : { 
                 "year" : NumberInt(-1), 
-                "COUNT(case_number)" : NumberInt(-1)
+                "num_crimes" : NumberInt(-1)
             }
         }
     ], 

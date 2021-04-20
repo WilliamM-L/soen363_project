@@ -1,8 +1,7 @@
 db = db.getSiblingDB("chicago_crimes");
 db.getCollection("crime").aggregate(
     [
-        {
-        // district is not null 
+        { 
             "$match" : { 
                 "district" : { 
                     "$ne" : null
@@ -14,6 +13,9 @@ db.getCollection("crime").aggregate(
                 "_id" : { 
                     "district" : "$district", 
                     "primary_type" : "$primary_type"
+                }, 
+                "COUNT(_id)" : { 
+                    "$sum" : NumberInt(1)
                 }
             }
         }, 
@@ -21,14 +23,17 @@ db.getCollection("crime").aggregate(
             "$project" : { 
                 "district" : "$_id.district", 
                 "primary_type" : "$_id.primary_type", 
+                "num_crimes" : "$COUNT(_id)", 
                 "_id" : NumberInt(0)
             }
         }, 
         { 
             "$sort" : { 
-                "district" : NumberInt(1), 
-                "primary_type" : NumberInt(1)
+                "num_crimes" : NumberInt(-1)
             }
+        }, 
+        { 
+            "$limit" : NumberInt(50)
         }
     ], 
     { 

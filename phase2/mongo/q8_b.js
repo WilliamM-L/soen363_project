@@ -14,13 +14,13 @@ db.getCollection("crime").aggregate(
         { 
             "$project" : { 
                 "location_description" : "$_id.location_description", 
-                "COUNT(*)" : "$COUNT(*)", 
+                "most_popular_crime_location" : "$COUNT(*)", 
                 "_id" : NumberInt(0)
             }
         }, 
         { 
             "$sort" : { 
-                "COUNT(*)" : NumberInt(-1)
+                "most_popular_crime_location" : NumberInt(-1)
             }
         }
     ], 
