@@ -1,5 +1,5 @@
 db = db.getSiblingDB("chicago_crimes");
-db.getCollection("phase2_part2").aggregate(
+db.getCollection("crime").aggregate(
     [
         { 
             "$match" : { 
