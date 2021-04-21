@@ -19,7 +19,7 @@ db.getCollection("crime").aggregate(
         {
             "$project" : {
                 "description" : "$_id.description",
-                "COUNT(*)" : "$COUNT(*)",
+                "num_crimes" : "$COUNT(*)",
                 "_id" : NumberInt(0)
             }
         },

@@ -21,7 +21,7 @@ db.getCollection("crime").aggregate(
         {
             "$project" : {
                 "ward" : "$_id.ward",
-                "COUNT(*)" : "$COUNT(*)",
+                "num_crimes" : "$COUNT(*)",
                 "_id" : NumberInt(0)
             }
         },
@@ -35,7 +35,3 @@ db.getCollection("crime").aggregate(
         "allowDiskUse" : true
     }
 );
-
-// Visualisation queries
-
-// percentage distribution
