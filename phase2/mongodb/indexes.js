@@ -1,2 +1,5 @@
-db.crimes.createIndex( { "year": 1, "primary_type": 1 } )
-db.crimes.createIndex( { "primary_type": 1 } )
+db.crime.createIndex( { "year": 1, "primary_type": 1 } )
+db.crime.createIndex( { "primary_type": 1 } )
+db.crime.createIndex( { "ward": 1 } )
+db.crime.createIndex( { "fbi_code": 1 } )
+db.crime.createIndex( { "location_description": 1 } )
