@@ -1,6 +1,0 @@
-//To be reviewed
-SELECT DISTINCT D.Year, CP.primary_type, COUNT(DISTINCT C.cid) as num_crimes_of_type
-FROM Date D, Crime C, Crime CP
-WHERE D.cid = C.cid AND CP.primary_type = C.primary_type
-Group by (D.Year, num_crimes_of_type)
-Order by D.Year DESC, num_crimes_of_type DESC;
