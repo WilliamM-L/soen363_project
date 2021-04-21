@@ -3,10 +3,13 @@ db.crime.aggregate([
     {
         $match: { year: 2008 }
     },
-    {
+    
+    
+   {
         $sortByCount: { $hour: "$date" }
 
     }
+    
 
 
 ])
@@ -19,4 +22,4 @@ db.crime.aggregate([
     }
 
 
-])
+]) 

@@ -1,33 +1,30 @@
 // Rate of crime of top 4 drugs
 db.crime.aggregate([
     {
-        $match: { fbi_code: '18' }
-    },
-    {
         "$facet": {
 
             "Cannabis": [
-                { "$match": { description: /CANNABIS/ } },
+                { "$match": { $and: [{ description: /CANNABIS/ }, { fbi_code: '18' }] } },
                 { "$count": "Cannabis" }
 
             ],
             "Crack": [
-                { "$match": { description: /CRACK/ } },
+                { "$match": { $and: [{ description: /CRACK/ }, { fbi_code: '18' }] } },
                 { "$count": "Crack" }
 
             ],
             "Heroin": [
-                { "$match": { description: /HEROIN/ } },
+                { "$match": { $and: [{ description: /HEROIN/ }, { fbi_code: '18' }] } },
                 { "$count": "Heroin" }
 
             ],
             "Cocaine": [
-                { "$match": { description: /COCAINE/ } },
+                { "$match": { $and: [{ description: /COCAINE/ }, { fbi_code: '18' }] } },
                 { "$count": "Cocaine" }
 
             ],
             "Total": [
-                { $match: { fbi_code: '18' } },
+                { $match: { primary_type: 'NARCOTICS' } },
                 { "$count": "Total" }
             ]
         }
