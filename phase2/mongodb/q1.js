@@ -1,17 +1,17 @@
 //Crimes in 2008 (listed)
-db.crimes.find(
+db.crime.find(
     {
         year: 2008
     }
 )
 
 //Crimes in 2008 (aggregated)
-db.crimes.aggregate([
+db.crime.aggregate([
     {
         "$match" : {year: 2008}
     },
     {
-        "$group" : 
+        "$group" :
         {
             _id:"$year",
             count:{$sum:1}
@@ -20,39 +20,39 @@ db.crimes.aggregate([
 ])
 
 //Number of crimes per year
-db.crimes.aggregate(
+db.crime.aggregate(
     [
-        { 
-            "$match" : { 
-                "year" : { 
+        {
+            "$match" : {
+                "year" : {
                     "$ne" : NumberLong(41)
                 }
             }
-        }, 
-        { 
-            "$group" : { 
-                "_id" : { 
+        },
+        {
+            "$group" : {
+                "_id" : {
                     "year" : "$year"
-                }, 
-                "COUNT(cid)" : { 
+                },
+                "COUNT(cid)" : {
                     "$sum" : NumberInt(1)
                 }
             }
-        }, 
-        { 
-            "$project" : { 
-                "year" : "$_id.year", 
-                "num_crimes" : "$COUNT(cid)", 
+        },
+        {
+            "$project" : {
+                "year" : "$_id.year",
+                "num_crimes" : "$COUNT(cid)",
                 "_id" : NumberInt(0)
             }
-        }, 
-        { 
-            "$sort" : { 
+        },
+        {
+            "$sort" : {
                 "year" : NumberInt(1)
             }
         }
-    ], 
-    { 
+    ],
+    {
         "allowDiskUse" : true
     }
 );
